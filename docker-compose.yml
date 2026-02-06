@@ -1,0 +1,89 @@
+version: "3.9"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: catanatron-backend
+    working_dir: /opt/catanatron/src
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://catanatron:victorypoint@db:5432/catanatron_db}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      NEGOTIATION_ADVICE_MODEL: ${NEGOTIATION_ADVICE_MODEL:-gpt-5o-mini}
+      NEGOTIATION_ADVICE_FALLBACK_MODEL: ${NEGOTIATION_ADVICE_FALLBACK_MODEL:-gpt-4o-mini}
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - cloudflared_network
+      - db_network
+
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-catanatron}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-victorypoint}
+      POSTGRES_DB: ${POSTGRES_DB:-catanatron_db}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-catanatron} -d ${POSTGRES_DB:-catanatron_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - db_network
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:8000"
+    depends_on:
+      - server
+    networks:
+      - cloudflared_network
+
+  cloudflared:
+    build:
+      context: .
+      dockerfile: cloudflared/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - nginx
+    networks:
+      - cloudflared_network
+
+  react-ui:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        CTRON_API_URL: ${CTRON_API_URL:-https://catapult.example.com}
+        CTRON_PUBLIC_URL: ${CTRON_PUBLIC_URL:-https://catapult.example.com}
+    container_name: catanatron-frontend
+    restart: unless-stopped
+    ports:
+      - "4173:80"
+    networks:
+      - cloudflared_network
+
+volumes:
+  pg-data:
+
+networks:
+  cloudflared_network:
+    driver: bridge
+  db_network:
+    driver: bridge
