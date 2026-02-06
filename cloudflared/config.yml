@@ -1,8 +1,8 @@
-tunnel: "YOUR_TUNNEL_ID"
-credentials-file: /etc/cloudflared/YOUR_TUNNEL_ID.json
+tunnel: "2565da1a-af08-4666-a8ff-65df59ae8cbd"
+credentials-file: /etc/cloudflared/2565da1a-af08-4666-a8ff-65df59ae8cbd.json
 
 ingress:
-  - hostname: catapult.example.com
+  - hostname: kunitake.net
     service: http://nginx:8000
     originRequest:
       noTLSVerify: true

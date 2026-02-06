@@ -1,0 +1,21 @@
+@use "../styles/turn-pill.scss";
+
+.turn-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem auto;
+  font-size: 1.1rem;
+  color: #f6f6f6;
+
+  .turn-label {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .turn-pill {
+    min-width: 160px;
+    text-align: center;
+  }
+}

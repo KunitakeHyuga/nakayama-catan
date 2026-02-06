@@ -1,0 +1,112 @@
+@use "sass:color";
+@use "../variables.scss" as variables;
+
+.negotiation-box {
+  .analysis-title-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: 1.1rem;
+  }
+
+  .analysis-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0 8px;
+  }
+
+  .advice-placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 8px 0 0;
+  }
+
+  .advice-output {
+    white-space: pre-wrap;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 12px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin-top: 8px;
+
+    .advice-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 4px;
+      margin: 0 1px;
+      border-radius: 3px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .player-red {
+      color: variables.$red;
+      background: rgba(variables.$red, 0.18);
+      border: 1px solid rgba(variables.$red, 0.35);
+    }
+
+    .player-blue {
+      color: variables.$blue;
+      background: rgba(variables.$blue, 0.18);
+      border: 1px solid rgba(variables.$blue, 0.35);
+    }
+
+    .player-white {
+      color: variables.$white;
+      background: rgba(variables.$white, 0.15);
+      border: 1px solid rgba(variables.$white, 0.3);
+    }
+
+    .player-orange {
+      color: variables.$orange;
+      background: rgba(variables.$orange, 0.2);
+      border: 1px solid rgba(variables.$orange, 0.35);
+    }
+
+    .resource-wood {
+      color: #0b1f10;
+      background: variables.$wood;
+      border: 1px solid color.scale(variables.$wood, $lightness: -25%);
+    }
+
+    .resource-brick {
+      color: #fff6f0;
+      background: variables.$brick;
+      border: 1px solid color.scale(variables.$brick, $lightness: -10%);
+    }
+
+    .resource-sheep {
+      color: #102711;
+      background: variables.$darker-sheep;
+      border: 1px solid color.scale(variables.$darker-sheep, $lightness: -25%);
+    }
+
+    .resource-wheat {
+      color: #3a2806;
+      background: variables.$wheat;
+      border: 1px solid color.scale(variables.$wheat, $lightness: -20%);
+    }
+
+    .resource-ore {
+      color: #f5f7ff;
+      background: variables.$ore;
+      border: 1px solid color.scale(variables.$ore, $lightness: -15%);
+    }
+  }
+}
+
+.negotiation-board-capture {
+  position: absolute;
+  width: 640px;
+  height: 480px;
+  left: -9999px;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}

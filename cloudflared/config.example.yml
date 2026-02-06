@@ -1,9 +1,0 @@
-tunnel: "YOUR_TUNNEL_ID"
-credentials-file: /etc/cloudflared/YOUR_TUNNEL_ID.json
-
-ingress:
-  - hostname: catapult.example.com
-    service: http://nginx:8000
-    originRequest:
-      noTLSVerify: true
-  - service: http_status:404

@@ -1,0 +1,25 @@
+.room-board-preview {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .preview-area {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    height: clamp(300px, 50vw, 500px);
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .tile {
+    position: absolute;
+  }
+}

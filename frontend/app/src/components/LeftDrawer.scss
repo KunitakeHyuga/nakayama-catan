@@ -1,0 +1,83 @@
+@use "../variables.scss";
+
+$dark-divider: rgb(0 0 0 / 80%);
+
+.left-drawer {
+  .MuiDrawer-paper {
+    width: min(320px, 95vw);
+    background: variables.$dark-gray;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .MuiDivider-root {
+    background: $dark-divider;
+  }
+
+  .MuiDrawer-paperAnchorDockedLeft {
+    border-color: $dark-divider;
+  }
+
+  .log {
+    overflow-y: auto;
+    font-size: 0.8rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    scrollbar-width: thin;
+    scrollbar-color: #454545 variables.$dark-gray;
+    .action {
+      padding: variables.$sm-gutter;
+      word-break: inherit;
+      overflow-wrap: inherit;
+    }
+
+    .log-highlight {
+      animation: log-entry-flash 2.2s ease-out;
+      border-radius: 4px;
+    }
+  }
+
+  .log-section {
+    border-top: 1px solid $dark-divider;
+
+    .collapsible-toggle {
+      padding: variables.$sm-gutter;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: calc(variables.$sm-gutter + 10px);
+
+      svg {
+        flex-shrink: 0;
+      }
+
+      .collapsible-icon {
+        right: variables.$sm-gutter;
+      }
+
+      .log-title span {
+        display: inline-block;
+        margin-left: 2px;
+      }
+    }
+
+    .collapsible-body {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  }
+}
+
+@keyframes log-entry-flash {
+  0% {
+    background: rgba(255, 255, 255, 0.25);
+  }
+  30% {
+    background: rgba(255, 255, 255, 0.18);
+  }
+  100% {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}

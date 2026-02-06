@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     container_name: catanatron-backend
-    working_dir: /opt/catanatron/src
+    working_dir: /opt/catanatron
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://catanatron:victorypoint@db:5432/catanatron_db}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -16,6 +16,8 @@ services:
     ports:
       - "5001:5001"
     restart: unless-stopped
+    volumes:
+      - ./backend/app:/opt/catanatron
     depends_on:
       db:
         condition: service_healthy
@@ -70,8 +72,8 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
       args:
-        CTRON_API_URL: ${CTRON_API_URL:-https://catapult.example.com}
-        CTRON_PUBLIC_URL: ${CTRON_PUBLIC_URL:-https://catapult.example.com}
+        CTRON_API_URL: ${CTRON_API_URL:-http://server:5001}
+        CTRON_PUBLIC_URL: ${CTRON_PUBLIC_URL:-http://server:5001}
     container_name: catanatron-frontend
     restart: unless-stopped
     ports:

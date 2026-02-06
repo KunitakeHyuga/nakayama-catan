@@ -1,8 +1,8 @@
-FROM node:20-slim AS build
+FROM node:24-slim AS build
 
 WORKDIR /opt/catanatron/ui
 
-COPY catanatron-src/ui ./
+COPY frontend/app/ ./
 
 RUN npm ci
 

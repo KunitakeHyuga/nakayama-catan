@@ -1,3 +1,6 @@
 .env
 cloudflared/*.json
-catanatron-src/
+frontend/app/node_modules/
+frontend/app/dist/
+frontend/app/package-lock.json
+*.pyc

@@ -12,9 +12,7 @@ RUN apt-get update \
 
 WORKDIR /opt/catanatron
 
-COPY catanatron-src ./src
-
-WORKDIR /opt/catanatron/src
+COPY backend/app/ .
 
 RUN pip install --upgrade pip \
     && pip install '.[web]'
