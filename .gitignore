@@ -2,5 +2,5 @@
 cloudflared/*.json
 frontend/app/node_modules/
 frontend/app/dist/
-frontend/app/package-lock.json
+__pycache__/
 *.pyc
