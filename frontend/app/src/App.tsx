@@ -36,7 +36,7 @@ function App() {
           TransitionComponent={Fade}
           TransitionProps={{ timeout: 100 }}
         >
-          <Router>
+          <Router basename={import.meta.env.VITE_BASE_PATH ?? "/"}>
             <Routes>
               <Route
                 path="/games/:gameId/states/:stateIndex"
