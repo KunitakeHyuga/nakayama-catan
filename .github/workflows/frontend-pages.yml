@@ -31,6 +31,7 @@ jobs:
         working-directory: frontend/app
         env:
           VITE_DEFAULT_API_BASE: ${{ secrets.VITE_DEFAULT_API_BASE }}
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
         run: npm run build -- --outDir ../../docs
       - name: Commit docs changes
         id: commit_docs
