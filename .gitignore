@@ -1,5 +1,7 @@
 .env
+.env.prod
 cloudflared/*.json
+cloudflared/*.pem
 frontend/app/node_modules/
 frontend/app/dist/
 docs/

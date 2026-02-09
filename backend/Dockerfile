@@ -17,10 +17,6 @@ COPY backend/app/ .
 RUN pip install --upgrade pip \
     && pip install '.[web]'
 
-ENV FLASK_APP=catanatron.web/catanatron.web \
-    FLASK_RUN_HOST=0.0.0.0 \
-    FLASK_RUN_PORT=5001
-
 EXPOSE 5001
 
-CMD ["flask", "run"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "2", "--threads", "4", "catanatron.web.wsgi:app"]

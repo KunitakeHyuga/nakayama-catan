@@ -1,0 +1,46 @@
+services:
+  server:
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      NEGOTIATION_ADVICE_MODEL: ${NEGOTIATION_ADVICE_MODEL:-gpt-5o-mini}
+      NEGOTIATION_ADVICE_FALLBACK_MODEL: ${NEGOTIATION_ADVICE_FALLBACK_MODEL:-gpt-4o-mini}
+    ports: []
+    volumes: []
+    networks:
+      - app_network
+      - db_network
+
+  db:
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports: []
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports: []
+    depends_on:
+      - server
+    networks:
+      - app_network
+
+  cloudflared:
+    build:
+      context: .
+      dockerfile: cloudflared/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - nginx
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+  db_network:
+    driver: bridge
