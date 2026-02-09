@@ -58,6 +58,18 @@ const ACTION_TYPE_LABELS: Record<string, string> = {
 
 type EnrichedRecord = GameRecordSummary & { updated_at_ms: number };
 
+function isValidGameId(value: unknown): value is string {
+  if (typeof value !== "string") {
+    return false;
+  }
+  const trimmed = value.trim();
+  return (
+    trimmed.length > 0 &&
+    trimmed !== "undefined" &&
+    trimmed !== "null"
+  );
+}
+
 function enrichRemote(records: GameRecordSummary[]): EnrichedRecord[] {
   const baseTime = Date.now();
   return records.map((record, index) => ({
@@ -90,6 +102,7 @@ function mergeRecords(
     }
   });
   return Array.from(mergedMap.values())
+    .filter((record) => isValidGameId(record.game_id))
     .map((record) => {
       const updatedAtMs =
         record.updated_at_ms ??
@@ -141,8 +154,10 @@ export default function RecordsPage() {
     setGames(combined);
     if (!paramsGameId && combined.length > 0 && !selectedGameId) {
       const [first] = combined;
-      setSelectedGameId(first.game_id);
-      navigate(`/records/${first.game_id}`, { replace: true });
+      if (isValidGameId(first.game_id)) {
+        setSelectedGameId(first.game_id);
+        navigate(`/records/${first.game_id}`, { replace: true });
+      }
     }
   }, [navigate, paramsGameId, selectedGameId]);
 
@@ -151,8 +166,10 @@ export default function RecordsPage() {
   }, [loadGames]);
 
   useEffect(() => {
-    if (paramsGameId) {
+    if (isValidGameId(paramsGameId)) {
       setSelectedGameId(paramsGameId);
+    } else {
+      setSelectedGameId(null);
     }
   }, [paramsGameId]);
 
@@ -192,6 +209,10 @@ export default function RecordsPage() {
   }, [selectedGameId]);
 
   const handleSelectGame = (gameId: string) => {
+    if (!isValidGameId(gameId)) {
+      setError("不正なゲームIDです。");
+      return;
+    }
     setSelectedGameId(gameId);
     navigate(`/records/${gameId}`);
   };
