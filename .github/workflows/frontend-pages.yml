@@ -35,7 +35,7 @@ jobs:
       - name: Build viewer
         working-directory: frontend/app
         env:
-          VITE_DEFAULT_API_BASE: ${{ secrets.VITE_DEFAULT_API_BASE }}
+          CTRON_API_URL: http://kunitake.net
           VITE_BASE_PATH: /
         run: npm run build -- --outDir ../../.pages-dist
       - name: Ensure Pages metadata files
