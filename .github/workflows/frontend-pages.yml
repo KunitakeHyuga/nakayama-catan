@@ -1,5 +1,5 @@
-# Build frontend and publish docs/ for GitHub Pages
-name: Build viewer into docs
+# Build frontend and deploy to GitHub Pages without committing generated files
+name: Deploy frontend to GitHub Pages
 
 on:
   push:
@@ -7,17 +7,22 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  build-docs:
-    if: github.actor != 'github-actions[bot]'
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -27,24 +32,29 @@ jobs:
       - name: Install frontend dependencies
         working-directory: frontend/app
         run: npm ci
-      - name: Build viewer into docs/
+      - name: Build viewer
         working-directory: frontend/app
         env:
           VITE_DEFAULT_API_BASE: ${{ secrets.VITE_DEFAULT_API_BASE }}
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
-        run: npm run build -- --outDir ../../docs
-      - name: Commit docs changes
-        id: commit_docs
+          VITE_BASE_PATH: /
+        run: npm run build -- --outDir ../../.pages-dist
+      - name: Ensure Pages metadata files
+        working-directory: frontend/app
         run: |
-          if [ -z "$(git status --short docs)" ]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
-          git commit -m "chore: update docs"
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-      - name: Push docs
-        if: steps.commit_docs.outputs.changed == 'true'
-        run: git push origin HEAD:${{ github.ref_name }}
+          cp public/CNAME ../../.pages-dist/CNAME
+          touch ../../.pages-dist/.nojekyll
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .pages-dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

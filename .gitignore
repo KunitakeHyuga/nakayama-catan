@@ -2,5 +2,6 @@
 cloudflared/*.json
 frontend/app/node_modules/
 frontend/app/dist/
+docs/
 __pycache__/
 *.pyc
