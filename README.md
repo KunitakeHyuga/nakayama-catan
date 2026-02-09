@@ -63,6 +63,7 @@ docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod
 - `server`: Flask + FastAPI ベースの Catanatron API（開発では `http://localhost:5001` に公開）。
   - API 一覧は `http://localhost:5001/apidocs/`（Flasgger Swagger UI）から確認できます。
 - `db`: PostgreSQL 15。`pg-data` ボリュームで永続化され、`DATABASE_URL` でサーバーへ共有されます（開発では `localhost:5432` 公開）。
+  - デプロイ時は `pg-data-prod` ボリュームを使うため、開発DBデータとは分離されます。
 - `nginx`: デプロイ時のみ有効。Cloudflared からの内部アクセス専用で、ホストには公開しません。
 - `cloudflared`: デプロイ時のみ有効。Cloudflare Tunnel へ接続し、外部から `https://<hostname>/` でアクセスできます。
 - `react-ui`: 開発で `http://localhost:4173` に公開。`CTRON_API_URL` で API ベース URL を指定可能です。
@@ -70,7 +71,9 @@ docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod
 停止:
 - 開発: `docker compose down`
 - デプロイ: `docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml down`
-PostgreSQL のデータは `pg-data` ボリュームに保持されます。
+PostgreSQL のデータは開発では `pg-data`、デプロイでは `pg-data-prod` に保持されます。
+
+本番DB設定を変更して初回デプロイする場合は、既存データとの不整合を避けるため必要に応じて `--volumes` を付けて再作成してください。
 
 ## よく使うカスタマイズ
 
