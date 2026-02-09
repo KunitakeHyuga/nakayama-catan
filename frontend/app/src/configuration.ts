@@ -20,7 +20,7 @@ const inferDefaultApiUrl = () => {
     if (LOCAL_HOSTNAMES.has(hostname)) {
       return `${protocol}//${hostname}:5001`;
     }
-    return "http://kunitake.net";
+    return "https://kunitake.net";
   }
 
   return configuredUrl || "http://localhost:5001";
