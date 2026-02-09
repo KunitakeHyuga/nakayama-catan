@@ -15,7 +15,7 @@ services:
       - "5001:5001"
     restart: unless-stopped
     volumes:
-      - ./backend/app:/opt/catanatron
+      - ./backend/app/catanatron:/opt/catanatron
     depends_on:
       db:
         condition: service_healthy

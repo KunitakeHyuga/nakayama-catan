@@ -12,10 +12,12 @@ RUN apt-get update \
 
 WORKDIR /opt/catanatron
 
-COPY backend/app/ .
+COPY backend/app/catanatron/ ./
 
 RUN pip install --upgrade pip \
     && pip install '.[web]'
+
+ENV PYTHONPATH=/opt/catanatron
 
 EXPOSE 5001
 
