@@ -34,16 +34,16 @@ jobs:
         run: npm ci
       - name: Validate Pages environment
         env:
-          CTRON_API_URL: ${{ secrets.CTRON_API_URL || vars.CTRON_API_URL }}
-          CTRON_PUBLIC_URL: ${{ secrets.CTRON_PUBLIC_URL || vars.CTRON_PUBLIC_URL }}
+          CTRON_API_URL: ${{ secrets.CTRON_API_URL || vars.CTRON_API_URL || 'https://kunitake.net' }}
+          CTRON_PUBLIC_URL: ${{ secrets.CTRON_PUBLIC_URL || vars.CTRON_PUBLIC_URL || 'https://nakayamalab-catan.jp' }}
         run: |
           test -n "$CTRON_API_URL" || (echo "CTRON_API_URL is required (set GitHub Secret/Variable)." && exit 1)
           test -n "$CTRON_PUBLIC_URL" || (echo "CTRON_PUBLIC_URL is required (set GitHub Secret/Variable)." && exit 1)
       - name: Build viewer
         working-directory: frontend/app
         env:
-          CTRON_API_URL: ${{ secrets.CTRON_API_URL || vars.CTRON_API_URL }}
-          CTRON_PUBLIC_URL: ${{ secrets.CTRON_PUBLIC_URL || vars.CTRON_PUBLIC_URL }}
+          CTRON_API_URL: ${{ secrets.CTRON_API_URL || vars.CTRON_API_URL || 'https://kunitake.net' }}
+          CTRON_PUBLIC_URL: ${{ secrets.CTRON_PUBLIC_URL || vars.CTRON_PUBLIC_URL || 'https://nakayamalab-catan.jp' }}
           VITE_BASE_PATH: /
         run: npm run build -- --outDir ../../.pages-dist
       - name: Ensure Pages metadata files
