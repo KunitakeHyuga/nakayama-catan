@@ -36,6 +36,7 @@ jobs:
         working-directory: frontend/app
         env:
           CTRON_API_URL: ${{ secrets.CTRON_API_URL || vars.CTRON_API_URL }}
+          CTRON_PUBLIC_URL: ${{ secrets.CTRON_PUBLIC_URL || vars.CTRON_PUBLIC_URL }}
           VITE_BASE_PATH: /
         run: npm run build -- --outDir ../../.pages-dist
       - name: Ensure Pages metadata files
