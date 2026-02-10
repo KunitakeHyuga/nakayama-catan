@@ -1,7 +1,20 @@
 const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "0.0.0.0"]);
+const PAGES_HOSTNAME = "nakayamalab-catan.jp";
+const PRODUCTION_API_URL = "https://kunitake.net";
 
 const inferDefaultApiUrl = () => {
   const configuredUrl = import.meta.env.CTRON_API_URL;
+  const browserHostname =
+    typeof window !== "undefined" && window.location
+      ? window.location.hostname
+      : null;
+
+  if (browserHostname === PAGES_HOSTNAME) {
+    if (!configuredUrl || configuredUrl.includes(PAGES_HOSTNAME)) {
+      return PRODUCTION_API_URL;
+    }
+  }
+
   if (configuredUrl) {
     return configuredUrl;
   }
